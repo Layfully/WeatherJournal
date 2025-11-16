@@ -3,11 +3,9 @@
 const apiKey = '976106a6c59595f35e90fff06a09ffe9&units=imperial';
 const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
-const serverUrl = '__BACKEND_URL__';
-
-const getRoute = `${serverUrl}/getData`;
-const postRoute = `${serverUrl}/addData`;
-const historyRoute = `${serverUrl}/history`;
+const getRoute = '/getData';
+const postRoute = '/addData';
+const historyRoute = '/history';
 
 
 /* ---------------------- DOM ELEMENTS ---------------------- */
