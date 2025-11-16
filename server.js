@@ -1,38 +1,55 @@
-// Setup empty JS object to act as endpoint for all routes
-projectData = {};
+'use strict';
 
-// Require Express to run server and routes
+const path = require('path');
 const express = require('express');
+const cors = require('cors');
 
-// Start up an instance of app
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+const projectHistory = [];
 
 /* Middleware*/
-//Here we are configuring express to use body-parser as middle-ware.
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-// Cors for cross origin allowance
-const cors = require('cors');
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Initialize the main project folder
-app.use(express.static('website'));
+app.use(express.static(path.join(__dirname, 'website')));
 
-
-// Setup Server
+// ROUTES
 app.get('/getData', (req, res) => {
-    res.send(projectData);
+    const latestEntry = projectHistory[projectHistory.length - 1] || {};
+    res.json(latestEntry);
 });
 
 app.post('/addData', (req, res) => {
-    const newData = req.body;
-    projectData.temp = newData.temp;
-    projectData.date = newData.date;
-    projectData.content = newData.content;
-    res.send(projectData);
+    const { temp, date, content, zip, name, description } = req.body ?? {};
+
+    if ([temp, date, zip, name, description].some(field => typeof field === 'undefined')) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const newEntry = {
+        zip: zip,
+        name: name,
+        description: description,
+        temp: temp,
+        date: date,
+        content: content ?? ''
+    };
+
+    projectHistory.push(newEntry);
+    return res.status(201).json(newEntry);
 });
 
-const port = 3000;
-const server = app.listen(port, () => { console.log(`running on localhost: ${port}`) });
+app.get('/history', (req, res) => {
+    res.json(projectHistory);
+});
+
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

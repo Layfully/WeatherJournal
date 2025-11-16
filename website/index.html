@@ -1,41 +1,90 @@
-<!DOCTYPE html>
-<html>
-
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Weather Journal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Weather Journal — Tailwind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .font-roboto { font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
 
-<body>
-  <div id="app">
-    <div class="holder headline">
-      <h1> Weather Journal App </h1>
-    </div>
-    <div class="holder zip">
-      <label for="zip">Enter Zipcode here</label>
-      <input type="text" id="zip" placeholder="enter zip code here">
-    </div>
-    <div class="holder feel">
-      <label for="feelings">How are you feeling today?</label>
-      <textarea class="myInput" id="feelings" placeholder="Enter your feelings here" rows="9" cols="50"></textarea>
-      <button id="generate" type="submit"> Generate </button>
-    </div>
-    <div class="holder entry">
-      <div>
-        <div id="entryTitle" class="title">Most Recent Entry</div>
-        <div id="entryHolder">
-          <div id="date"></div>
-          <div id="temp"></div>
-          <div id="content"></div>
+        :root { --g1: #ee7752; --g2: #e73c7e; --g3: #23a6d5; --g4: #23d5ab; }
+        body {
+            background: linear-gradient(-45deg, var(--g1), var(--g2), var(--g3), var(--g4));
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+
+        :focus { outline: 3px solid rgba(255,255,255,0.12); outline-offset: 2px; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 font-roboto text-white">
+<main id="app" class="w-full max-w-4xl">
+    <header class="mb-6 text-center">
+        <h1 class="text-4xl sm:text-5xl font-extrabold drop-shadow-lg">Weather Journal App</h1>
+        <p class="mt-2 text-sm opacity-90">Record the weather & your mood — beautiful and responsive.</p>
+    </header>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/10 flex flex-col gap-4" onsubmit="return false;">
+            <label for="zip" class="text-lg font-semibold">Enter Zipcode</label>
+            <input id="zip" name="zip" type="text" placeholder="e.g. 10001"
+                   class="h-14 w-full rounded-xl bg-white/90 placeholder-gray-400 px-4 py-3 text-lg text-gray-800 border border-gray-200 focus:ring-2 focus:ring-indigo-300" />
+
+            <label for="feelings" class="mt-2 text-lg font-semibold">How are you feeling today?</label>
+            <textarea id="feelings" class="myInput h-36 w-full rounded-xl bg-white/90 placeholder-gray-400 px-4 py-3 resize-none text-lg text-gray-800 border border-gray-200 focus:ring-2 focus:ring-indigo-300"
+                      placeholder="Enter your feelings here"></textarea>
+
+            <button id="generate" type="submit"
+                    class="mt-2 h-14 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition shadow-inner font-semibold text-lg text-white">
+                Generate
+            </button>
+        </form>
+
+        <aside class="bg-white/8 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-white/10 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between">
+                    <div id="entryTitle" class="text-xl font-bold">Most Recent Entry</div>
+                    <div class="text-sm opacity-80">Updated live</div>
+                </div>
+
+                <div id="entryHolder" class="mt-4 grid gap-2">
+                    <div id="cityName" class="text-2xl font-bold -mb-1"></div>
+                    <div class="flex gap-4 text-sm opacity-85 text-white/90">
+                        <div id="date"></div>
+                        <div id="zipcode"></div>
+                    </div>
+                    <div id="temp" class="text-3xl font-extrabold mt-2"></div>
+                    <div id="weatherDesc" class="text-lg opacity-95 capitalize -mt-1"></div>
+                    <div id="content" class="whitespace-pre-wrap text-lg opacity-95 mt-2"></div>
+                </div>
+            </div>
+
+            <footer class="mt-6 text-xs opacity-80 text-right">Made with ❤️ — layout using Tailwind.</footer>
+        </aside>
+    </section>
+
+    <section class="mt-12">
+        <h2 class="mb-4 text-center text-3xl font-bold drop-shadow-md">Entry History</h2>
+
+        <div id="history" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- JavaScript will fill this area -->
         </div>
-      </div>
+    </section>
+
+    <div id="error" class="hidden fixed inset-0 flex items-center justify-center pointer-events-none">
+        <div class="pointer-events-auto bg-red-600/95 text-white font-semibold rounded-xl px-6 py-4 shadow-xl border border-red-400/20">Something went wrong</div>
     </div>
-  </div>
-  <div id="error"></div>
-  <script src="app.js" type="text/javascript"></script>
+</main>
+
+<script src="app.js" type="text/javascript"></script>
 </body>
 </html>
