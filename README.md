@@ -37,8 +37,7 @@ To run this app, you'll need to have Node.js installed on your machine. Then, cl
 
 ## Demo
 You can see a screenshot of this project:
-![obraz](https://user-images.githubusercontent.com/15947565/232327402-d02b11df-d3c0-4070-9703-3fa82e13e1ca.png)
-
+<img width="1129" height="980" alt="image" src="https://github.com/user-attachments/assets/80c11956-d4da-4c16-8c75-1a982647d674" />
 
 ## License
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
